@@ -40,7 +40,7 @@
   <jndiEntry jndiName="configuration_directory" value="${project.basedir}/src/test/resources"/>
   <jndiEntry jndiName="configuration_logfile" value="${logback-file}"/>
 
-  <dataSource jndiName="jdbc/database" type="javax.sql.DataSource">
+  <dataSource id="DefaultDataSource" jndiName="jdbc/database" type="javax.sql.DataSource">
     <jdbcDriver>
       <library>
         <fileset dir="${project.build.directory}/jdbc" includes="derby.jar"/>

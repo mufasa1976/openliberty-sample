@@ -13,6 +13,6 @@ public class SampleController {
   @GET
   @Produces(MediaType.TEXT_PLAIN)
   public String sayHello(@QueryParam("name") String name) {
-    return "Hello (we are winning), " + name;
+    return "Hello, " + name;
   }
 }
