@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.github.mufasa1976.openliberty</groupId>
+  <artifactId>openliberty-sample</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <properties>
+    <java.version>17</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <user.language>en</user.language>
+
+    <skipUnitTests>${skipTests}</skipUnitTests>
+
+    <liberty.version>22.0.0.11</liberty.version>
+    <liberty.jvm.user.language>-Duser.language=en</liberty.jvm.user.language>
+    <liberty.jvm.agentlib>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</liberty.jvm.agentlib>
+    <liberty.bootstrap.project.basedir>${project.basedir}</liberty.bootstrap.project.basedir>
+    <liberty.bootstrap.project.build.directory>${project.build.directory}</liberty.bootstrap.project.build.directory>
+
+    <lombok.version>1.18.12</lombok.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    <logback-classic.version>1.2.3</logback-classic.version>
+    <javaee.version>9.1</javaee.version>
+    <microprofile.version>5.0</microprofile.version>
+    <commons-lang3.version>3.12.0</commons-lang3.version>
+    <assertj.version>3.23.1</assertj.version>
+    <mockito.version>4.8.1</mockito.version>
+
+    <liberty-maven-plugin.version>3.7.1</liberty-maven-plugin.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jul-to-slf4j</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>log4j-over-slf4j</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback-classic.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax</groupId>
+        <artifactId>javaee-api</artifactId>
+        <version>${javaee.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.eclipse.microprofile</groupId>
+        <artifactId>microprofile</artifactId>
+        <version>${microprofile.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commons-lang3.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- APT Processors -->
+    <!-- Lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- Compile Dependencies -->
+    <!-- Logback classic -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+
+    <!-- Apache Commons -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+
+    <!-- Provided Dependencies (not packaged) -->
+    <!-- Java EE -->
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Eclipse Microprofile - Config -->
+    <dependency>
+      <groupId>org.eclipse.microprofile.config</groupId>
+      <artifactId>microprofile-config-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- Eclipse Microprofile - Health -->
+    <dependency>
+      <groupId>org.eclipse.microprofile.health</groupId>
+      <artifactId>microprofile-health-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- Eclipse Microprofile - Metrics -->
+    <dependency>
+      <groupId>org.eclipse.microprofile.metrics</groupId>
+      <artifactId>microprofile-metrics-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <!-- Eclipse Microprofile - REST Client -->
+    <dependency>
+      <groupId>org.eclipse.microprofile.rest.client</groupId>
+      <artifactId>microprofile-rest-client-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Runtime Dependencies -->
+    <!-- SLF4J Bridges -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jul-to-slf4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>log4j-over-slf4j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- Test Dependencies -->
+    <!-- AssertJ -->
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Mockito -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.2.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.3.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.3.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.0.0-M7</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>3.0.0-M7</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.10.1</version>
+        </plugin>
+        <plugin>
+          <groupId>io.openliberty.tools</groupId>
+          <artifactId>liberty-maven-plugin</artifactId>
+          <version>${liberty-maven-plugin.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skipTests>${skipUnitTests}</skipTests>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>io.openliberty.tools</groupId>
+        <artifactId>liberty-maven-plugin</artifactId>
+        <configuration>
+          <assemblyArtifact>
+            <groupId>io.openliberty</groupId>
+            <artifactId>openliberty-runtime</artifactId>
+            <version>${liberty.version}</version>
+            <type>zip</type>
+          </assemblyArtifact>
+          <runtimeArtifact>
+            <groupId>io.openliberty</groupId>
+            <artifactId>openliberty-runtime</artifactId>
+            <version>${liberty.version}</version>
+            <type>zip</type>
+          </runtimeArtifact>
+          <stripVersion>true</stripVersion>
+          <features>
+            <acceptLicense>true</acceptLicense>
+          </features>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <packagingExcludes>WEB-INF/classes/**/DevelopmentInitializationServletContextListener.class</packagingExcludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>default-profile</id>
+      <activation>
+        <property>
+          <name>!run</name>
+        </property>
+      </activation>
+
+      <properties>
+        <liberty.jvm.logback>-Dlogback.configurationFile=${project.basedir}/src/test/resources/logback-test.xml</liberty.jvm.logback>
+        <liberty.bootstrap.logback-file>logback-test.xml</liberty.bootstrap.logback-file>
+      </properties>
+
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy database driver</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.apache.derby</groupId>
+                      <artifactId>derby</artifactId>
+                      <version>${derby.version}</version>
+                    </artifactItem>
+                  </artifactItems>
+                  <stripVersion>true</stripVersion>
+                  <outputDirectory>${project.build.directory}/jdbc</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>io.openliberty.tools</groupId>
+            <artifactId>liberty-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>create and clean openliberty test-server</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>create</goal>
+                  <goal>clean</goal>
+                </goals>
+                <configuration>
+                  <cleanApps>true</cleanApps>
+                  <cleanDropins>true</cleanDropins>
+                  <cleanLogs>true</cleanLogs>
+                  <cleanWorkarea>true</cleanWorkarea>
+                  <looseApplication>true</looseApplication>
+                </configuration>
+              </execution>
+              <execution>
+                <id>configure arquillian-managed test-server</id>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>configure-arquillian</goal>
+                </goals>
+                <configuration>
+                  <arquillianProperties>
+                    <serverStartTimeout>60</serverStartTimeout>
+                    <appDeployTimeout>60</appDeployTimeout>
+                    <appUndeployTimeout>30</appUndeployTimeout>
+                  </arquillianProperties>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>run integration tests</id>
+                <goals>
+                  <goal>integration-test</goal>
+                </goals>
+                <configuration>
+                  <includes>
+                    <include>**/*IT</include>
+                  </includes>
+                </configuration>
+              </execution>
+              <execution>
+                <goals>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>run-profile</id>
+      <activation>
+        <property>
+          <name>run</name>
+        </property>
+      </activation>
+
+      <properties>
+        <liberty.bootstrap.logback-file>logback-run.xml</liberty.bootstrap.logback-file>
+        <liberty.bootstrap.test.initializeDatabase>true</liberty.bootstrap.test.initializeDatabase>
+      </properties>
+
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy database driver</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.apache.derby</groupId>
+                      <artifactId>derby</artifactId>
+                      <version>${derby.version}</version>
+                    </artifactItem>
+                    <artifactItem>
+                      <groupId>com.ibm.db2</groupId>
+                      <artifactId>jcc</artifactId>
+                      <version>${db2.version}</version>
+                    </artifactItem>
+                  </artifactItems>
+                  <stripVersion>true</stripVersion>
+                  <outputDirectory>${project.build.directory}/jdbc</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>io.openliberty.tools</groupId>
+            <artifactId>liberty-maven-plugin</artifactId>
+            <configuration>
+              <serverName>OpenLiberty</serverName>
+              <cleanApps>true</cleanApps>
+              <cleanDropins>true</cleanDropins>
+              <cleanLogs>true</cleanLogs>
+              <cleanWorkarea>true</cleanWorkarea>
+              <skipTestServer>true</skipTestServer>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
+
