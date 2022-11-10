@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server>
+  <featureManager>
+    <feature>servlet-5.0</feature>
+    <feature>restfulWS-3.0</feature>
+    <feature>cdi-3.0</feature>
+    <feature>persistence-3.0</feature>
+    <feature>beanValidation-3.0</feature>
+    <feature>mpConfig-3.0</feature>
+    <feature>mpHealth-4.0</feature>
+    <feature>mpMetrics-4.0</feature>
+    <feature>mpOpenAPI-3.0</feature>
+
+    <!-- only for tests -->
+    <feature>monitor-1.0</feature>
+    <feature>localConnector-1.0</feature>
+  </featureManager>
+
+  <variable name="http.port" defaultValue="9080"/>
+  <variable name="https.port" defaultValue="-1"/>
+
+  <httpEndpoint id="defaultHttpEndpoint" host="127.0.0.1" httpPort="${http.port}" httpsPort="${https.port}"/>
+
+  <mpMetrics authentication="false"/>
+
+  <!-- Used by Arquillian to connect to the Test-Server -->
+  <applicationMonitor updateTrigger="mbean"/>
+  <remoteFileAccess>
+    <writeDir>${server.config.dir}/dropins</writeDir>
+  </remoteFileAccess>
+
+  <!-- Allow to read Contents of JAR-Files (and WAR-Files) as jar: rather than wsjar: -->
+  <!-- https://www.ibm.com/support/pages/apar/PM99378 -->
+  <classloading useJarUrls="true"/>
+
+  <logging traceSpecification="*=info:eclipselink.sql=all:com.ibm.ws.batch.JobLogger=all" traceFileName="trace.log" maxFileSize="20" maxFiles="10" traceFormat="BASIC"/>
+
+  <quickStartSecurity userName="admin" userPassword="admin"/>
+
+  <jndiEntry jndiName="configuration_directory" value="${project.basedir}/src/test/resources"/>
+  <jndiEntry jndiName="configuration_logfile" value="${logback-file}"/>
+
+  <dataSource jndiName="jdbc/database" type="javax.sql.DataSource">
+    <jdbcDriver>
+      <library>
+        <fileset dir="${project.build.directory}/jdbc" includes="derby.jar"/>
+      </library>
+    </jdbcDriver>
+    <properties.derby.embedded databaseName="memory:myDB" createDatabase="create"/>
+  </dataSource>
+
+  <!--
+  <dataSource id="DefaultDataSource" jndiName="jdbc/database" type="javax.sql.DataSource">
+    <jdbcDriver>
+      <library>
+        <fileset dir="${project.build.directory}/jdbc" includes="jcc.jar"/>
+      </library>
+    </jdbcDriver>
+    <properties.db2.jcc databaseName="WSDB1" serverName="ibm-host.local" portNumber="50000" user="db2inst1" password="passw0rd"/>
+  </dataSource>
+  -->
+</server>

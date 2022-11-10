@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.2">
+  <persistence-unit name="default">
+    <jta-data-source>jdbc/database</jta-data-source>
+    <properties>
+      <property name="eclipselink.deploy-on-startup" value="true" />
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <!-- remove me after Test - BEGIN -->
+      <!--
+      <property name="eclipselink.logging.level" value="ALL"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      -->
+      <!-- remove me after Test - END -->
+    </properties>
+  </persistence-unit>
+</persistence>

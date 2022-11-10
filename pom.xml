@@ -17,24 +17,24 @@
 
     <user.language>en</user.language>
 
-    <skipUnitTests>${skipTests}</skipUnitTests>
-
     <liberty.version>22.0.0.11</liberty.version>
     <liberty.jvm.user.language>-Duser.language=en</liberty.jvm.user.language>
-    <liberty.jvm.agentlib>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</liberty.jvm.agentlib>
     <liberty.bootstrap.project.basedir>${project.basedir}</liberty.bootstrap.project.basedir>
     <liberty.bootstrap.project.build.directory>${project.build.directory}</liberty.bootstrap.project.build.directory>
 
-    <lombok.version>1.18.12</lombok.version>
-    <slf4j.version>1.7.25</slf4j.version>
-    <logback-classic.version>1.2.3</logback-classic.version>
-    <javaee.version>9.1</javaee.version>
+    <lombok.version>1.18.24</lombok.version>
+    <slf4j.version>2.0.1</slf4j.version>
+    <logback-classic.version>1.4.4</logback-classic.version>
+    <jakartaee.version>9.1.0</jakartaee.version>
     <microprofile.version>5.0</microprofile.version>
     <commons-lang3.version>3.12.0</commons-lang3.version>
     <assertj.version>3.23.1</assertj.version>
     <mockito.version>4.8.1</mockito.version>
+    <flyway.version>9.7.0</flyway.version>
 
     <liberty-maven-plugin.version>3.7.1</liberty-maven-plugin.version>
+    <derby.version>10.14.2.0</derby.version>
+    <db2.version>11.5.8.0</db2.version>
   </properties>
 
   <dependencyManagement>
@@ -70,9 +70,11 @@
       </dependency>
 
       <dependency>
-        <groupId>javax</groupId>
-        <artifactId>javaee-api</artifactId>
-        <version>${javaee.version}</version>
+        <groupId>jakarta.platform</groupId>
+        <artifactId>jakarta.jakartaee-bom</artifactId>
+        <version>${jakartaee.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <dependency>
@@ -100,6 +102,12 @@
         <artifactId>mockito-core</artifactId>
         <version>${mockito.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-core</artifactId>
+        <version>${flyway.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -126,11 +134,27 @@
       <artifactId>commons-lang3</artifactId>
     </dependency>
 
+    <!-- Flyway DB -->
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+    </dependency>
+
     <!-- Provided Dependencies (not packaged) -->
     <!-- Java EE -->
     <dependency>
-      <groupId>javax</groupId>
-      <artifactId>javaee-api</artifactId>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -152,10 +176,10 @@
       <artifactId>microprofile-metrics-api</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!-- Eclipse Microprofile - REST Client -->
+    <!-- Eclipse Microprofile - OpenAPI -->
     <dependency>
-      <groupId>org.eclipse.microprofile.rest.client</groupId>
-      <artifactId>microprofile-rest-client-api</artifactId>
+      <groupId>org.eclipse.microprofile.openapi</groupId>
+      <artifactId>microprofile-openapi-api</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -239,13 +263,6 @@
               <version>${lombok.version}</version>
             </path>
           </annotationProcessorPaths>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <skipTests>${skipUnitTests}</skipTests>
         </configuration>
       </plugin>
 
@@ -340,20 +357,6 @@
                   <looseApplication>true</looseApplication>
                 </configuration>
               </execution>
-              <execution>
-                <id>configure arquillian-managed test-server</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>configure-arquillian</goal>
-                </goals>
-                <configuration>
-                  <arquillianProperties>
-                    <serverStartTimeout>60</serverStartTimeout>
-                    <appDeployTimeout>60</appDeployTimeout>
-                    <appUndeployTimeout>30</appUndeployTimeout>
-                  </arquillianProperties>
-                </configuration>
-              </execution>
             </executions>
           </plugin>
 
@@ -392,7 +395,6 @@
 
       <properties>
         <liberty.bootstrap.logback-file>logback-run.xml</liberty.bootstrap.logback-file>
-        <liberty.bootstrap.test.initializeDatabase>true</liberty.bootstrap.test.initializeDatabase>
       </properties>
 
       <build>
