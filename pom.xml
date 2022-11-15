@@ -20,7 +20,6 @@
     <liberty.version>22.0.0.11</liberty.version>
     <liberty.jvm.user.language>-Duser.language=en</liberty.jvm.user.language>
     <liberty.bootstrap.project.basedir>${project.basedir}</liberty.bootstrap.project.basedir>
-    <liberty.bootstrap.project.build.directory>${project.build.directory}</liberty.bootstrap.project.build.directory>
 
     <lombok.version>1.18.24</lombok.version>
     <slf4j.version>2.0.1</slf4j.version>
@@ -229,10 +228,6 @@
           <version>3.3.2</version>
         </plugin>
         <plugin>
-          <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.3.0</version>
-        </plugin>
-        <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>3.0.0-M7</version>
         </plugin>
@@ -288,13 +283,6 @@
           </features>
         </configuration>
       </plugin>
-
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <packagingExcludes>WEB-INF/classes/**/DevelopmentInitializationServletContextListener.class</packagingExcludes>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
@@ -315,30 +303,6 @@
       <build>
         <plugins>
           <plugin>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy database driver</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>copy</goal>
-                </goals>
-                <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>org.apache.derby</groupId>
-                      <artifactId>derby</artifactId>
-                      <version>${derby.version}</version>
-                    </artifactItem>
-                  </artifactItems>
-                  <stripVersion>true</stripVersion>
-                  <outputDirectory>${project.build.directory}/jdbc</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
             <groupId>io.openliberty.tools</groupId>
             <artifactId>liberty-maven-plugin</artifactId>
             <executions>
@@ -350,6 +314,15 @@
                   <goal>clean</goal>
                 </goals>
                 <configuration>
+                  <copyDependencies>
+                    <dependency>
+                      <groupId>org.apache.derby</groupId>
+                      <artifactId>derby</artifactId>
+                      <version>${derby.version}</version>
+                    </dependency>
+                    <location>jdbc</location>
+                    <stripVersion>true</stripVersion>
+                  </copyDependencies>
                   <cleanApps>true</cleanApps>
                   <cleanDropins>true</cleanDropins>
                   <cleanLogs>true</cleanLogs>
@@ -400,44 +373,30 @@
       <build>
         <plugins>
           <plugin>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy database driver</id>
-                <phase>process-resources</phase>
-                <goals>
-                  <goal>copy</goal>
-                </goals>
-                <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>org.apache.derby</groupId>
-                      <artifactId>derby</artifactId>
-                      <version>${derby.version}</version>
-                    </artifactItem>
-                    <artifactItem>
-                      <groupId>com.ibm.db2</groupId>
-                      <artifactId>jcc</artifactId>
-                      <version>${db2.version}</version>
-                    </artifactItem>
-                  </artifactItems>
-                  <stripVersion>true</stripVersion>
-                  <outputDirectory>${project.build.directory}/jdbc</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
             <groupId>io.openliberty.tools</groupId>
             <artifactId>liberty-maven-plugin</artifactId>
             <configuration>
+              <copyDependencies>
+                <dependency>
+                  <groupId>org.apache.derby</groupId>
+                  <artifactId>derby</artifactId>
+                  <version>${derby.version}</version>
+                </dependency>
+                <dependency>
+                  <groupId>com.ibm.db2</groupId>
+                  <artifactId>jcc</artifactId>
+                  <version>${db2.version}</version>
+                </dependency>
+                <location>jdbc</location>
+                <stripVersion>true</stripVersion>
+              </copyDependencies>
               <serverName>OpenLiberty</serverName>
               <cleanApps>true</cleanApps>
               <cleanDropins>true</cleanDropins>
               <cleanLogs>true</cleanLogs>
               <cleanWorkarea>true</cleanWorkarea>
               <skipTestServer>true</skipTestServer>
+              <libertyDebugPort>5005</libertyDebugPort>
             </configuration>
           </plugin>
         </plugins>

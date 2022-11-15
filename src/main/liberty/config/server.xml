@@ -43,7 +43,7 @@
   <dataSource id="DefaultDataSource" jndiName="jdbc/database" type="javax.sql.DataSource">
     <jdbcDriver>
       <library>
-        <fileset dir="${project.build.directory}/jdbc" includes="derby.jar"/>
+        <fileset dir="jdbc" includes="derby.jar"/>
       </library>
     </jdbcDriver>
     <properties.derby.embedded databaseName="memory:myDB" createDatabase="create"/>
@@ -53,7 +53,7 @@
   <dataSource id="DefaultDataSource" jndiName="jdbc/database" type="javax.sql.DataSource">
     <jdbcDriver>
       <library>
-        <fileset dir="${project.build.directory}/jdbc" includes="jcc.jar"/>
+        <fileset dir="jdbc" includes="jcc.jar"/>
       </library>
     </jdbcDriver>
     <properties.db2.jcc databaseName="WSDB1" serverName="ibm-host.local" portNumber="50000" user="db2inst1" password="passw0rd"/>
